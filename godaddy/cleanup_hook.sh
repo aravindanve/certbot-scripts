@@ -22,6 +22,12 @@ record_name="_acme-challenge.${record_name/\.${domain}/}"
 # output
 echo "adding ${record_name} TXT record for domain ${domain} ..."
 
+# validate credentials file
+if [ ! -f $dns_credentials_file ]; then
+  echo "credentials file ${dns_credentials_file} not found"
+  exit 1
+fi
+
 # options
 api_url=`expr match "$(cat "${dns_credentials_file}" | grep API_URL)" 'API_URL=\(.*\)'`
 api_key=`expr match "$(cat "${dns_credentials_file}" | grep API_KEY)" 'API_KEY=\(.*\)'`

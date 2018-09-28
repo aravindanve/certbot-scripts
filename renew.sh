@@ -15,23 +15,37 @@ domains=$4
 server="https://acme-v02.api.letsencrypt.org/directory"
 
 # validate dns
-if [ dns = 'godaddy' ]; then
+if [ 'godaddy' = "${dns}" ]; then
   auth_hook=$base_path/godaddy/auth_hook.sh
   cleanup_hook=$base_path/godaddy/cleanup_hook.sh
 
-else if [ dns = 'azure' ]; then
-  echo "Support for $dns not implemented"
+elif [ 'azure' = "${dns}" ]; then
+  echo "Support for ${dns} not implemented"
   exit 1
 
 else
-  echo "Support for $dns not implemented"
+  echo "DNS must be either godaddy or azure"
+  echo "usage: ./renew.sh <DNS:godaddy|azure> <DNS_CREDENTIALS_FILE> <EMAIL> <DOMAINS>"
   exit 1
 fi
 
 # validate credentials file
-if [ ! -f $dns_credentials_file ]; then
+if [ -f $dns_credentials_file ]; then
   echo "Credentials file ${dns_credentials_file} not found"
-  exit 1;
+  exit 1
+fi
+
+# validate options
+if [ -z $email ]; then
+  echo "Email is required"
+  echo "usage: ./renew.sh <DNS:godaddy|azure> <DNS_CREDENTIALS_FILE> <EMAIL> <DOMAINS>"
+  exit 1
+fi
+
+if [ -z $domains ]; then
+  echo "Comma separated list of domains are required"
+  echo "usage: ./renew.sh <DNS:godaddy|azure> <DNS_CREDENTIALS_FILE> <EMAIL> <DOMAINS>"
+  exit 1
 fi
 
 # renew certs

@@ -13,13 +13,13 @@ domain=`expr match "${CERTBOT_DOMAIN}" '\*\?\.\?\(.*\)'`
 echo "deleting _acme-challenge TXT record for ${domain} ..."
 
 # options
-api_url="https://api.godaddy.com"
+api_url=`expr match "$(cat "${DNS_CREDENTIALS_FILE}" | grep API_URL)" 'API_URL=\(.*\)'`
 api_key=`expr match "$(cat "${DNS_CREDENTIALS_FILE}" | grep API_KEY)" 'API_KEY=\(.*\)'`
 api_secret=`expr match "$(cat "${DNS_CREDENTIALS_FILE}" | grep API_SECRET)" 'API_SECRET=\(.*\)'`
 
 # validate credentials
-if [ -z $api_key ] || [ -z $api_secret ]; then
-  echo "API_KEY and API_SECRET must be present in ${DNS_CREDENTIALS_FILE}"
+if [ -z $api_url ] || [ -z $api_key ] || [ -z $api_secret ]; then
+  echo "API_URL, API_KEY and API_SECRET must be present in ${DNS_CREDENTIALS_FILE}"
   exit 1;
 fi
 

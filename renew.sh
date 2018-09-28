@@ -30,7 +30,7 @@ else
 fi
 
 # validate credentials file
-if [ -f $dns_credentials_file ]; then
+if [ ! -f $dns_credentials_file ]; then
   echo "Credentials file ${dns_credentials_file} not found"
   exit 1
 fi

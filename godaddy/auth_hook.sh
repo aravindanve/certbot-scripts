@@ -1,25 +1,35 @@
+#!/bin/bash
 # certbot godaddy dns auth hook
 # @aravindanve
 
 # env variables
 # CERTBOT_DOMAIN
 # CERTBOT_VALIDATION
-# DNS_CREDENTIALS_FILE
 
-# strip wildcard prefix
-domain=`expr match "${CERTBOT_DOMAIN}" '\*\?\.\?\(.*\)'`
-
-# output
-echo "adding _acme-challenge TXT record for ${domain} ..."
+# set base path (hooks are called from their own directory)
+base_path="$(dirname `which "$0"`)/.."
 
 # options
-api_url=`expr match "$(cat "${DNS_CREDENTIALS_FILE}" | grep API_URL)" 'API_URL=\(.*\)'`
-api_key=`expr match "$(cat "${DNS_CREDENTIALS_FILE}" | grep API_KEY)" 'API_KEY=\(.*\)'`
-api_secret=`expr match "$(cat "${DNS_CREDENTIALS_FILE}" | grep API_SECRET)" 'API_SECRET=\(.*\)'`
+dns_credentials_file=$1
+domain=$2
+
+# strip wildcard prefix
+record_name=`expr match "${CERTBOT_DOMAIN}" '\*\?\.\?\(.*\)'`
+
+# strip domain part and add challenge prefix
+record_name="_acme-challenge.${record_name/\.${domain}/}"
+
+# output
+echo "adding ${record_name} TXT record for domain ${domain} ..."
+
+# options
+api_url=`expr match "$(cat "${dns_credentials_file}" | grep API_URL)" 'API_URL=\(.*\)'`
+api_key=`expr match "$(cat "${dns_credentials_file}" | grep API_KEY)" 'API_KEY=\(.*\)'`
+api_secret=`expr match "$(cat "${dns_credentials_file}" | grep API_SECRET)" 'API_SECRET=\(.*\)'`
 
 # validate credentials
 if [ -z $api_url ] || [ -z $api_key ] || [ -z $api_secret ]; then
-  echo "API_URL, API_KEY and API_SECRET must be present in ${DNS_CREDENTIALS_FILE}"
+  echo "API_URL, API_KEY and API_SECRET must be present in ${dns_credentials_file}"
   exit 1;
 fi
 
@@ -31,7 +41,7 @@ curl \
   -d "[\
     {\
       \"type\": \"TXT\",
-      \"name\": \"_acme-challenge\",
+      \"name\": \"${record_name}\",
       \"data\": \"${CERTBOT_VALIDATION}\",
       \"ttl\": 3600\
     }\

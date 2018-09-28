@@ -68,6 +68,7 @@ fi
     --manual-cleanup-hook "$cleanup_hook" \
     --preferred-challenges dns-01 \
     --agree-tos \
+    --manual-public-ip-logging-ok \
     -n \
     --server "$server" \
     --email "$email" \

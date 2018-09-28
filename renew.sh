@@ -36,13 +36,13 @@ if [ ! -f $dns_credentials_file ]; then
 fi
 
 # options
-api_url=`expr match "$(cat "${DNS_CREDENTIALS_FILE}" | grep API_URL)" 'API_URL=\(.*\)'`
-api_key=`expr match "$(cat "${DNS_CREDENTIALS_FILE}" | grep API_KEY)" 'API_KEY=\(.*\)'`
-api_secret=`expr match "$(cat "${DNS_CREDENTIALS_FILE}" | grep API_SECRET)" 'API_SECRET=\(.*\)'`
+api_url=`expr match "$(cat "${dns_credentials_file}" | grep API_URL)" 'API_URL=\(.*\)'`
+api_key=`expr match "$(cat "${dns_credentials_file}" | grep API_KEY)" 'API_KEY=\(.*\)'`
+api_secret=`expr match "$(cat "${dns_credentials_file}" | grep API_SECRET)" 'API_SECRET=\(.*\)'`
 
 # validate credentials
 if [ -z $api_url ] || [ -z $api_key ] || [ -z $api_secret ]; then
-  echo "API_URL, API_KEY and API_SECRET must be present in ${DNS_CREDENTIALS_FILE}"
+  echo "API_URL, API_KEY and API_SECRET must be present in ${dns_credentials_file}"
   exit 1;
 fi
 

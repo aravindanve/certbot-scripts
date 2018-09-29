@@ -78,16 +78,14 @@ if [ -z $domains ]; then
 fi
 
 # renew certs
-(
-  sudo certbot certonly \
-    --manual \
-    --manual-auth-hook "$auth_hook $dns_credentials_file $zone" \
-    --manual-cleanup-hook "$cleanup_hook $dns_credentials_file $zone" \
-    --preferred-challenges dns-01 \
-    --agree-tos \
-    --manual-public-ip-logging-ok \
-    -n \
-    --server "$server" \
-    --email "$email" \
-    -d "$domains"
-)
+sudo certbot certonly \
+  --manual \
+  --manual-auth-hook "$auth_hook $dns_credentials_file $zone" \
+  --manual-cleanup-hook "$cleanup_hook $dns_credentials_file $zone" \
+  --preferred-challenges dns-01 \
+  --agree-tos \
+  --manual-public-ip-logging-ok \
+  -n \
+  --server "$server" \
+  --email "$email" \
+  -d "$domains"

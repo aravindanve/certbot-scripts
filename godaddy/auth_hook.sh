@@ -52,3 +52,6 @@ curl \
       \"ttl\": 3600\
     }\
   ]"
+
+# wait for propagation
+sleep 60

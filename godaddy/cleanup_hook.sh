@@ -39,6 +39,7 @@ if [ -z $api_url ] || [ -z $api_key ] || [ -z $api_secret ]; then
   exit 1;
 fi
 
+# NOTE: known bug, godaddy api has no delete method and putting an empty array does nothing
 # delete record
 curl \
   -X PUT "${api_url}/v1/domains/${domain}/records/TXT/${record_name}" \
